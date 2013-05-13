@@ -8,16 +8,18 @@ Gem::Specification.new do |gem|
   gem.email = 'skullzeek@gmail.com'
   gem.homepage = 'http://github.com/kalabiyau/freemium'
   gem.authors = ['Lance Ivy', 'Anton Oryol', 'Christian Trosclair']
-  gem.add_dependency 'rails', '~> 3.1.3'
+
+  gem.required_ruby_version     = '>= 1.9.2'
+
+  gem.add_dependency 'rails', '~> 3.0'
   gem.add_dependency 'money'
   gem.add_development_dependency 'rspec-rails'
   gem.add_development_dependency 'bundler'
   gem.add_development_dependency 'rspec-rails'
   gem.add_development_dependency 'sqlite3-ruby'
   gem.add_development_dependency 'bundler'
-  gem.executables   = `git ls-files -- bin/*`.split('\n').map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")
-  gem.test_files    = `git ls-files -- {test,spec,features}/*`.split('\n')
-  gem.require_paths = ['lib']
+  gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
+  gem.require_paths = %w(lib)
   gem.version       = Freemium::VERSION
 end
