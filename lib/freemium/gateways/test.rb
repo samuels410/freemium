@@ -1,6 +1,8 @@
 module Freemium
   module Gateways
     class Test < Base
+      attr_accessor :username, :password
+
       def transactions(options = {})
         options
       end
