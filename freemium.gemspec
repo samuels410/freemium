@@ -19,7 +19,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'ruby-debug-base19', "~>0.11.26"
   gem.add_development_dependency 'ruby-debug19',"~>0.11.6"
   gem.add_development_dependency 'rspec-rails'
-  gem.add_development_dependency "autotest"
   gem.add_development_dependency "sqlite3-ruby"
   gem.add_development_dependency "bundler", "~> 1.1.rc.8"
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
