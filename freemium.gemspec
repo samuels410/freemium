@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version     = '>= 1.9.2'
 
-  gem.add_dependency 'rails', '~> 2.0'
+  gem.add_dependency 'rails', '>= 3.0'
   gem.add_dependency 'money'
   gem.add_development_dependency 'rspec-rails'
   gem.add_development_dependency 'bundler'
