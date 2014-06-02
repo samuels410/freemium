@@ -12,10 +12,10 @@ module Freemium
     def self.included(base)
       base.class_eval do
         belongs_to :subscription_plan, :class_name => "SubscriptionPlan"
-        belongs_to :subscribable, :polymorphic => true
+          belongs_to :subscribable, :polymorphic => true
         belongs_to :credit_card, :dependent => :destroy, :class_name => "CreditCard"
-        has_many :coupon_redemptions, :conditions => "coupon_redemptions.expired_on IS NULL", :class_name => "CouponRedemption", :foreign_key => :subscription_id, :dependent => :destroy
-        has_many :coupons, :through => :coupon_redemptions, :conditions => "coupon_redemptions.expired_on IS NULL"
+        # has_many :coupon_redemptions, :conditions => "coupon_redemptions.expired_on IS NULL", :class_name => "CouponRedemption", :foreign_key => :subscription_id, :dependent => :destroy
+        # has_many :coupons, :through => :coupon_redemptions, :conditions => "coupon_redemptions.expired_on IS NULL"
 
         # Auditing
         has_many :transactions, :class_name => "AccountTransaction", :foreign_key => :subscription_id
@@ -38,16 +38,16 @@ module Freemium
         after_update  :audit_update
         after_destroy :audit_destroy
 
-        validates_presence_of :subscribable
-        validates_associated  :subscribable
-        validates_presence_of :subscription_plan
-        validates_presence_of :paid_through, :if => :paid?
-        validates_presence_of :started_on
-        validates_presence_of :credit_card, :if => :store_credit_card?
-        validates_associated  :credit_card#, :if => :store_credit_card?
+        validates_presence_of :subscribable_id,:subscribable_type
+           # validates_associated  :subscribable
+       validates_presence_of :subscription_plan
+       validates_presence_of :paid_through, :if => :paid?
+       validates_presence_of :started_on
+       validates_presence_of :credit_card, :if => :store_credit_card?
+       validates_associated  :credit_card#, :if => :store_credit_card?
 
-        validate :gateway_validates_credit_card
-        validate :coupon_exist
+       validate :gateway_validates_credit_card
+       validate :coupon_exist
       end
       base.extend ClassMethods
     end
@@ -154,7 +154,8 @@ module Freemium
 
     def audit_create
       ::SubscriptionChange.create(:reason => "new",
-                                        :subscribable => self.subscribable,
+                                        :subscribable_id => self.subscribable_id,
+                                        :subscribable_type => self.subscribable_type,
                                         :new_subscription_plan_id => self.subscription_plan_id,
                                         :new_rate => self.rate,
                                         :original_rate => Money.empty)
@@ -165,7 +166,8 @@ module Freemium
         return if self.original_plan.nil?
         reason = self.original_plan.rate > self.subscription_plan.rate ? (self.expired? ? "expiration" : "downgrade") : "upgrade"
         ::SubscriptionChange.create(:reason => reason,
-                                          :subscribable => self.subscribable,
+                                          :subscribable_id => self.subscribable_id,
+                                          :subscribable_type => self.subscribable_type,
                                           :original_subscription_plan_id => self.original_plan.id,
                                           :original_rate => self.rate(:plan => self.original_plan),
                                           :new_subscription_plan_id => self.subscription_plan.id,
@@ -175,7 +177,8 @@ module Freemium
 
     def audit_destroy
       ::SubscriptionChange.create(:reason => "cancellation",
-                                        :subscribable => self.subscribable,
+                                        :subscribable_id => self.subscribable_id,
+                                        :subscribable_type => self.subscribable_type,
                                         :original_subscription_plan_id => self.subscription_plan_id,
                                         :original_rate => self.rate,
                                         :new_rate => Money.empty)
