@@ -347,6 +347,11 @@ module Freemium
       # if they've paid again, then reset expiration
       #we have monthly subscription so keep the record
       # self.expire_on = nil
+      if subscription_plan_id_changed? and paid?
+        self.expire_on = Date.today + 1.months
+      else
+        self.expire_on = nil
+      end
       self.in_trial = false
     end
 
