@@ -345,7 +345,8 @@ module Freemium
       end
 
       # if they've paid again, then reset expiration
-      self.expire_on = nil
+      #we have monthly subscription so keep the record
+      # self.expire_on = nil
       self.in_trial = false
     end
 
